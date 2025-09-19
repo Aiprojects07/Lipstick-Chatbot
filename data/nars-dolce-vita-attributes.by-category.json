@@ -1,0 +1,502 @@
+{
+  "Color": {
+    "Primary_Color": [
+      "Dusty Rose"
+    ],
+    "Secondary_Color": [
+      "Mauve"
+    ],
+    "Tertiary_Color": [
+      "Berry"
+    ],
+    "Undertone": [
+      "Warm"
+    ],
+    "Color_Family": [
+      "Pink-Nude"
+    ],
+    "Color_Depth": [
+      "Medium-Dark"
+    ],
+    "Color_Saturation": [
+      "Muted"
+    ],
+    "MLBB_Status": [
+      "Yes (for NC15-35)"
+    ],
+    "Nude_Type": [
+      "Rosy Nude"
+    ],
+    "White_Base_Level": [
+      "High"
+    ],
+    "Pigmentation_Level": [
+      "High"
+    ],
+    "Opacity": [
+      "70-80% Coverage"
+    ],
+    "Color_Buildability": [
+      "Limited"
+    ],
+    "Oxidation_Tendency": [
+      "Shifts Warmer/Darker"
+    ],
+    "Post_Oxidation_Color": [
+      "Terracotta-Rose"
+    ]
+  },
+  "Formula": {
+    "Finish_Type": [
+      "Soft Matte"
+    ],
+    "Initial_Texture": [
+      "Mousse-Like"
+    ],
+    "Weight_Feel": [
+      "Ultra-Lightweight"
+    ],
+    "Formula_Innovation": [
+      "Cloud Diffusion Complex"
+    ],
+    "Silicone_Content": [
+      "High"
+    ],
+    "Titanium_Dioxide_Level": [
+      "High"
+    ],
+    "Wax_Content": [
+      "Minimal"
+    ],
+    "Oil_Content": [
+      "Minimal"
+    ],
+    "Film_Former_Present": [
+      "No"
+    ],
+    "Adhesion_Level": [
+      "Poor"
+    ],
+    "Slip_Factor": [
+      "High"
+    ],
+    "Cushiony_Feel": [
+      "Yes"
+    ],
+    "Aerated_Texture": [
+      "Yes"
+    ],
+    "Volatile_Silicone_Based": [
+      "Yes"
+    ],
+    "Micropowder_Technology": [
+      "Yes"
+    ]
+  },
+  "Performance": {
+    "Wear_Time_Realistic": [
+      "2-3 Hours"
+    ],
+    "Wear_Time_Maximum": [
+      "4 Hours"
+    ],
+    "Transfer_Resistance": [
+      "Very Low"
+    ],
+    "Kiss_Proof": [
+      "No"
+    ],
+    "Mask_Proof": [
+      "No"
+    ],
+    "Smudge_Proof": [
+      "No"
+    ],
+    "Water_Resistant": [
+      "No"
+    ],
+    "Oil_Resistant": [
+      "No"
+    ],
+    "Food_Survival": [
+      "Cannot Survive"
+    ],
+    "Drink_Survival": [
+      "Cannot Survive"
+    ],
+    "Straw_Compatible": [
+      "Marginally"
+    ],
+    "Reapplication_Frequency": [
+      "Every 2 Hours"
+    ],
+    "Touch_Up_Difficulty": [
+      "Easy"
+    ],
+    "Setting_Time": [
+      "Never Fully Sets"
+    ],
+    "Longevity_Rating": [
+      "Poor (2/10)"
+    ]
+  },
+  "Skin_Tone": {
+    "Best_For_MAC_Range": [
+      "NC15-35"
+    ],
+    "Fair_Skin_Performance": [
+      "Good"
+    ],
+    "Light_Skin_Performance": [
+      "Excellent"
+    ],
+    "Medium_Skin_Performance": [
+      "Excellent"
+    ],
+    "Deep_Skin_Performance": [
+      "Poor"
+    ],
+    "Cool_Undertone_Effect": [
+      "Emphasizes Berry"
+    ],
+    "Warm_Undertone_Effect": [
+      "Emphasizes Peach"
+    ],
+    "Neutral_Undertone_Effect": [
+      "Balanced Rose"
+    ],
+    "Yogurt_Effect_Risk": [
+      "High on Deep Skin"
+    ],
+    "Ashy_On_Deep_Skin": [
+      "Yes"
+    ]
+  },
+  "Application": {
+    "Application_Method_Best": [
+      "Finger Blend"
+    ],
+    "Applicator_Type": [
+      "Custom Tapered Tip"
+    ],
+    "Product_Dispensing": [
+      "Over-Dispenses"
+    ],
+    "Precision_Level": [
+      "Medium"
+    ],
+    "Blending_Ease": [
+      "Excellent"
+    ],
+    "Gradient_Lip_Suitable": [
+      "Excellent"
+    ],
+    "Korean_Beauty_Compatible": [
+      "Yes"
+    ],
+    "Defined_Lip_Application": [
+      "Poor"
+    ],
+    "Diffused_Application": [
+      "Excellent"
+    ],
+    "Layering_Performance": [
+      "Poor"
+    ]
+  },
+  "Wear_Evolution": {
+    "Initial_Blur_Effect": [
+      "Yes (1-2 hours)"
+    ],
+    "Texture_Enhancement_Time": [
+      "After 2 Hours"
+    ],
+    "Line_Settling": [
+      "High After 3 Hours"
+    ],
+    "Dry_Patch_Emphasis": [
+      "High"
+    ],
+    "Flaking_Visibility": [
+      "High"
+    ],
+    "Cakey_Tendency": [
+      "Yes"
+    ],
+    "Sticky_Development": [
+      "After 1 Hour"
+    ],
+    "Patchy_Wear": [
+      "Yes"
+    ],
+    "Ring_Effect_Eating": [
+      "Yes"
+    ],
+    "Migration_Tendency": [
+      "High"
+    ]
+  },
+  "Climate": {
+    "Heat_Resistance": [
+      "Very Poor"
+    ],
+    "Humidity_Resistance": [
+      "Very Poor"
+    ],
+    "Cold_Weather_Performance": [
+      "Good"
+    ],
+    "AC_Environment_Performance": [
+      "Good"
+    ],
+    "Melting_Point": [
+      "30°C"
+    ],
+    "Indian_Summer_Compatible": [
+      "No"
+    ],
+    "Monsoon_Suitable": [
+      "No"
+    ],
+    "Winter_Exclusive": [
+      "Recommended"
+    ],
+    "Climate_Controlled_Only": [
+      "Preferred"
+    ]
+  },
+  "Occasion": {
+    "Wedding_Appropriate": [
+      "No"
+    ],
+    "Office_Appropriate": [
+      "Yes (with touch-ups)"
+    ],
+    "Date_Night_Suitable": [
+      "No"
+    ],
+    "Photography_Performance_Initial": [
+      "Excellent"
+    ],
+    "Photography_Performance_After_2Hr": [
+      "Poor"
+    ],
+    "Flash_Photography_Safe": [
+      "Initially Yes"
+    ],
+    "Video_Call_Appropriate": [
+      "Yes"
+    ],
+    "Short_Event_Suitable": [
+      "Yes"
+    ],
+    "All_Day_Wear_Suitable": [
+      "No"
+    ],
+    "Brunch_Appropriate": [
+      "Yes"
+    ]
+  },
+  "Lifestyle": {
+    "Maintenance_Level": [
+      "High"
+    ],
+    "Touch_Up_Friendly": [
+      "Yes"
+    ],
+    "Commute_Survival": [
+      "Poor"
+    ],
+    "Busy_Lifestyle_Compatible": [
+      "No"
+    ],
+    "Minimal_Makeup_Routine": [
+      "No"
+    ],
+    "Quick_Application_Possible": [
+      "Yes"
+    ],
+    "Travel_Friendly": [
+      "No (requires constant reapplication)"
+    ],
+    "Gym_Bag_Essential": [
+      "No"
+    ],
+    "Desk_Drawer_Staple": [
+      "Yes"
+    ]
+  },
+  "Demographics": {
+    "Age_Best_For": [
+      "Under 35"
+    ],
+    "Mature_Lip_Suitable": [
+      "No"
+    ],
+    "Lip_Line_Friendly": [
+      "No"
+    ],
+    "Smooth_Lips_Required": [
+      "Yes"
+    ],
+    "Two_Toned_Lip_Compatible": [
+      "No"
+    ],
+    "Pigmented_Lip_Performance": [
+      "Poor"
+    ],
+    "Professional_MUA_Rating": [
+      "Mixed"
+    ],
+    "Beginner_Friendly": [
+      "Yes (for application)"
+    ],
+    "Expert_User_Recommended": [
+      "Yes (for maintenance)"
+    ]
+  },
+  "Sensory": {
+    "Scent_Profile": [
+      "Light Vanilla"
+    ],
+    "Taste_Profile": [
+      "None"
+    ],
+    "Fragrance_Sensitivity_Safe": [
+      "Yes"
+    ],
+    "Chemical_Smell": [
+      "No"
+    ],
+    "Comfort_Level": [
+      "Excellent"
+    ],
+    "Drying_Factor": [
+      "Medium"
+    ],
+    "Hydration_Level": [
+      "None"
+    ],
+    "Lip_Conditioning": [
+      "No"
+    ]
+  },
+  "Packaging": {
+    "Packaging_Material": [
+      "Matte Rubber"
+    ],
+    "Fingerprint_Magnet": [
+      "Yes"
+    ],
+    "Hygiene_Maintenance": [
+      "Difficult"
+    ],
+    "Deterioration_Risk": [
+      "High in Humidity"
+    ],
+    "Sticky_Packaging_Issue": [
+      "Yes Over Time"
+    ],
+    "Logo_Durability": [
+      "Poor with Cleaning"
+    ]
+  },
+  "Comparison": {
+    "Versus_Powermatte": [
+      "Less Long-Wearing"
+    ],
+    "Versus_Velvet_Matte": [
+      "Less Adhesive"
+    ],
+    "Versus_Original_Lipstick": [
+      "Less Stable"
+    ],
+    "Comfort_Priority": [
+      "Yes"
+    ],
+    "Performance_Priority": [
+      "No"
+    ],
+    "Similar_To_Korean_Tints": [
+      "Yes"
+    ],
+    "Western_Formula_Type": [
+      "Yes"
+    ]
+  },
+  "Problem_Indicators": {
+    "Dry_Lip_Emphasizer": [
+      "Yes"
+    ],
+    "Texture_Revealer": [
+      "Yes"
+    ],
+    "Line_Settler": [
+      "Yes"
+    ],
+    "Transfer_Criminal": [
+      "Yes"
+    ],
+    "Mask_Destroyer": [
+      "Yes"
+    ],
+    "Cup_Stainer": [
+      "Yes"
+    ],
+    "Food_Incompatible": [
+      "Yes"
+    ],
+    "Heat_Sensitive": [
+      "Yes"
+    ]
+  },
+  "Special_Use": {
+    "Gradient_Lip_Expert": [
+      "Yes"
+    ],
+    "Blotted_Lip_Effect": [
+      "Achievable"
+    ],
+    "Stain_Effect_Possible": [
+      "Yes (with blotting)"
+    ],
+    "Mixing_Compatible": [
+      "Yes"
+    ],
+    "Primer_Recommended": [
+      "Yes"
+    ],
+    "Setting_Powder_Needed": [
+      "Yes"
+    ],
+    "Lip_Liner_Essential": [
+      "For Deep Skin"
+    ]
+  },
+  "Value": {
+    "Price_Point": [
+      "Mid-Range"
+    ],
+    "Cost_Per_Wear": [
+      "High (due to reapplication)"
+    ],
+    "Limited_Edition_Status": [
+      "No (Permanent)"
+    ],
+    "Cult_Status": [
+      "Yes"
+    ],
+    "Influencer_Favorite": [
+      "Yes"
+    ],
+    "Editorial_Favorite": [
+      "Yes"
+    ],
+    "Stockpile_Worthy": [
+      "No"
+    ],
+    "Shelf_Life_Concern": [
+      "Yes (volatile silicones)"
+    ]
+  }
+}
