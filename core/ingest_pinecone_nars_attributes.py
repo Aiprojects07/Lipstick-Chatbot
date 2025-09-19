@@ -1,3 +1,4 @@
+# In this file there is need to change both attributes path and report path 
 import os
 import json
 import time
@@ -105,7 +106,7 @@ JSON_PATH = os.getenv(
 BATCH_SIZE = int(os.getenv("BATCH_SIZE", os.getenv("UPSERT_BATCH_SIZE", "100")))
 
 # Namespace segregation (None means default behavior)
-NAMESPACE = os.getenv("PINECONE_NAMESPACE") or None
+NAMESPACE = os.getenv("PINECONE_NAMESPACE", "default")
 
 # Pinecone serverless spec
 PINECONE_CLOUD = os.getenv("PINECONE_CLOUD", "aws")
@@ -150,6 +151,8 @@ def yield_records(data: Dict[str, Dict[str, List[str]]]) -> Iterable[Dict]:
                     "position": i,                 # occurrence index to preserve multiplicity
                     "source": os.path.basename(JSON_PATH),
                     "schema": "category->attribute_name->values[]",
+                    # Provide human-readable content for prompting
+                    "content": text,
                     # product identity for retrieval alignment
                     "product_id": PRODUCT_ID,
                     "product_name": PRODUCT_NAME,

@@ -1,3 +1,4 @@
+# In this file there is need to change only report json file path
 #!/usr/bin/env python3
 """
 Ingest a Markdown-derived Q&A report JSON into Pinecone (full coverage).
@@ -319,9 +320,9 @@ def main():
     logger.info("Starting NARS report ingestion process")
     
     # Configuration from environment variables only
-    file_path = os.getenv("FILE_PATH", "/home/sid/Documents/Lipstick_Chatbot 1/Lipstick_Chatbot/data/nars-dolce-vita-report-2.json")
+    file_path = os.getenv("FILE_PATH", "/home/sid/Documents/Lipstick_Chatbot 1/Lipstick_Chatbot/data/nars-dolce-vita-reports.json")
     index_name = os.getenv("PINECONE_INDEX_NAME", "lipstick-chatbot")
-    namespace = os.getenv("PINECONE_NAMESPACE", "reports")
+    namespace = os.getenv("PINECONE_NAMESPACE", "default")
     environment = os.getenv("PINECONE_ENVIRONMENT", "us-east-1")
     embedding_model = os.getenv("OPENAI_EMBEDDING_MODEL", "text-embedding-3-large")
     batch_size = int(os.getenv("BATCH_SIZE", "100"))

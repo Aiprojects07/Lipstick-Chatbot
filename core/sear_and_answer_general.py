@@ -229,11 +229,6 @@ def answer_with_claude_no_filters(query: str) -> Dict[str, Any]:
     prompt = make_prompt_for_claude(query, contexts)
     system_prompt = load_system_prompt()
 
-    # DEBUG: Show actual prompt sent to Claude
-    print("\n=== DEBUG: PROMPT SENT TO CLAUDE ===")
-    print(prompt[:500] + "..." if len(prompt) > 500 else prompt)
-    print("=== END DEBUG ===\n")
-
     t7 = time.perf_counter()
     msg = anthropic_client.messages.create(
         model=claude_model,

@@ -1,3 +1,4 @@
+# In this file there is need to change only dupes json file path
 #!/usr/bin/env python3
 """
 Ingest a "dupe guide" JSON into Pinecone (full coverage, no data loss).
@@ -333,7 +334,7 @@ def main():
     # Configuration from environment variables only
     json_file_path = "/home/sid/Documents/Lipstick_Chatbot 1/Lipstick_Chatbot/data/nars-dolce-vita-dupes.json"
     index_name = os.getenv("PINECONE_INDEX_NAME", "lipstick-chatbot")
-    namespace = os.getenv("PINECONE_NAMESPACE", "dupes")
+    namespace = os.getenv("PINECONE_NAMESPACE", "default")
     environment = os.getenv("PINECONE_ENVIRONMENT", "us-east-1")
     embedding_model = os.getenv("OPENAI_EMBEDDING_MODEL", "text-embedding-3-large")
 
