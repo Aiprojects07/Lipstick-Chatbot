@@ -1,0 +1,186 @@
+{
+    "original_product": {
+      "name": "NARS Air Matte Lip Color in Dolce Vita",
+      "price_usd": 28,
+      "shade_description": "Warm-toned, medium-dark mauve/dusty rose - universally flattering"
+    },
+    "dupes": [
+      {
+        "rank": 1,
+        "category": "HIGH-END",
+        "brand": "MAC",
+        "product": "Mehr",
+        "shade": null,
+        "price_usd": 22,
+        "pros": ["Very close color match", "Warm mauve tone", "Excellent formula"],
+        "cons": ["Satin finish instead of matte", "Slightly less longevity"],
+        "verdict": "One of the closest color matches; great if you prefer a less matte finish"
+      },
+      {
+        "rank": 2,
+        "category": "HIGH-END",
+        "brand": "MAC",
+        "product": "Creme in Your Coffee",
+        "shade": null,
+        "price_usd": 22,
+        "pros": ["Similar dusty rose tone", "Creamy formula"],
+        "cons": ["Slightly brighter and browner than Dolce Vita"],
+        "verdict": "Good alternative if you want a touch more warmth"
+      },
+      {
+        "rank": 3,
+        "category": "HIGH-END",
+        "brand": "Clinique",
+        "product": "Nude Pop",
+        "shade": null,
+        "price_usd": 23,
+        "pros": ["Almost perfect color match", "Moisturizing formula"],
+        "cons": ["More glossy/balm-like finish", "Less long-wearing"],
+        "verdict": "Great if you prefer hydrating formulas over matte"
+      },
+      {
+        "rank": 4,
+        "category": "MID-RANGE",
+        "brand": "Milani",
+        "product": "Color Statement Lipstick",
+        "shade": "Matte Naked",
+        "price_usd": 7,
+        "pros": ["Great matte formula", "Very similar color"],
+        "cons": ["Slightly more pink-toned", "Can be drying"],
+        "verdict": "Excellent budget option for matte lovers"
+      },
+      {
+        "rank": 5,
+        "category": "MID-RANGE",
+        "brand": "ColourPop",
+        "product": "Lippie Stix",
+        "shade": "Beeper",
+        "price_usd": 7,
+        "pros": ["Very close color match", "Comfortable formula", "Cruelty-free"],
+        "cons": ["Less long-wearing", "Creamier than matte"],
+        "verdict": "Great affordable option with good color payoff"
+      },
+      {
+        "rank": 6,
+        "category": "DRUGSTORE",
+        "brand": "NYX",
+        "product": "Soft Matte Lip Cream",
+        "shade": "Abu Dhabi",
+        "price_usd": 7,
+        "pros": ["Beautiful dusty rose shade", "Comfortable liquid matte formula"],
+        "cons": ["Slightly darker and more orange-toned"],
+        "verdict": "Excellent drugstore liquid lipstick alternative"
+      },
+      {
+        "rank": 7,
+        "category": "DRUGSTORE",
+        "brand": "Maybelline",
+        "product": "SuperStay Matte Ink",
+        "shade": "Touch of Spice",
+        "price_usd": 10,
+        "pros": ["Extremely long-wearing (up to 16 hours)", "Transfer-proof"],
+        "cons": ["More plum-toned", "Can be very drying", "Difficult to remove"],
+        "verdict": "Best for all-day wear but sacrifices comfort"
+      },
+      {
+        "rank": 8,
+        "category": "DRUGSTORE",
+        "brand": "Revlon",
+        "product": "Super Lustrous Lipstick",
+        "shade": "Rosewine",
+        "price_usd": 8,
+        "pros": ["Classic formula", "Very similar dusty rose color"],
+        "cons": ["Cream finish instead of matte", "Shorter wear time"],
+        "verdict": "Great for those who prefer traditional bullet lipsticks"
+      },
+      {
+        "rank": 9,
+        "category": "DRUGSTORE",
+        "brand": "Revlon",
+        "product": "Super Lustrous Sheer",
+        "shade": "Pink Truffle",
+        "price_usd": 8,
+        "pros": ["Perfect MLBB shade", "Comfortable sheer formula"],
+        "cons": ["Much sheerer coverage", "Needs frequent reapplication"],
+        "verdict": "Good for a more natural, low-maintenance look"
+      },
+      {
+        "rank": 10,
+        "category": "DRUGSTORE",
+        "brand": "L'Oreal",
+        "product": "Color Riche Le Gloss",
+        "shade": "Really Rose",
+        "price_usd": 10,
+        "pros": ["Nearly identical color in gloss form", "Non-sticky"],
+        "cons": ["Gloss finish", "Only lasts ~2 hours"],
+        "verdict": "Perfect if you prefer glossy lips over matte"
+      },
+      {
+        "rank": 11,
+        "category": "ULTRA-BUDGET",
+        "brand": "e.l.f.",
+        "product": "Matte Lip Color",
+        "shade": null,
+        "price_usd": 3,
+        "pros": ["Incredibly affordable", "Decent color match"],
+        "cons": ["Less pigmented", "Requires building up", "Shorter wear"],
+        "verdict": "Best for trying the color without commitment"
+      },
+      {
+        "rank": 12,
+        "category": "ULTRA-BUDGET",
+        "brand": "Wet n Wild",
+        "product": "MegaLast Lipstick",
+        "shade": "Bare It All",
+        "price_usd": 3,
+        "pros": ["Great matte formula for the price", "Similar nude-pink tone"],
+        "cons": ["Can be drying", "Slightly lighter than Dolce Vita"],
+        "verdict": "Excellent ultra-budget option"
+      },
+      {
+        "rank": 13,
+        "category": "ALTERNATIVE FORMULAS",
+        "brand": "NARS",
+        "product": "Velvet Matte Lip Pencil",
+        "shade": "Dolce Vita",
+        "price_usd": 28,
+        "pros": ["Exact same shade", "Pencil format for precision"],
+        "cons": ["Same price point", "Different texture experience"],
+        "verdict": "Perfect if you prefer pencil application"
+      },
+      {
+        "rank": 14,
+        "category": "ALTERNATIVE FORMULAS",
+        "brand": "Glossier",
+        "product": "Generation G",
+        "shade": "Cake",
+        "price_usd": 20,
+        "pros": ["Similar rosy shade", "Unique blotted lip effect"],
+        "cons": ["Very sheer", "Buildable coverage", "Less long-wearing"],
+        "verdict": "Modern, editorial look with similar color family"
+      }
+    ],
+    "best_picks": {
+      "best_overall_dupe": "MAC Mehr",
+      "best_budget_dupe": "NYX Soft Matte Lip Cream in Abu Dhabi",
+      "best_long_wearing": "Maybelline SuperStay Matte Ink in Touch of Spice",
+      "best_comfort": "Clinique Nude Pop",
+      "best_ultra_budget": "Wet n Wild MegaLast in Bare It All"
+    },
+    "main_tradeoffs": {
+      "finish": "Most dupes offer cream, satin, or traditional matte rather than NARS's unique air-matte texture",
+      "longevity": "NARS tends to last longer than most drugstore options",
+      "comfort": "Some long-wearing dupes sacrifice comfort",
+      "color_accuracy": "Slight variations in undertone (more pink, orange, or plum) are common",
+      "application": "NARS applicator provides precision that some bullets may not match"
+    },
+    "shopping_strategy": {
+      "color_accuracy_first": ["MAC Mehr", "Clinique Nude Pop"],
+      "budget_conscious": ["NYX Soft Matte Lip Cream in Abu Dhabi", "Milani Color Statement Lipstick in Matte Naked"],
+      "all_day_wear": ["Maybelline SuperStay Matte Ink in Touch of Spice"],
+      "comfort_over_longevity": ["Clinique Nude Pop", "ColourPop Lippie Stix in Beeper"],
+      "testing_the_color": ["e.l.f. Matte Lip Color", "Wet n Wild MegaLast Lipstick in Bare It All"]
+    },
+    "notes": "Prices may vary by retailer and location. Always check for sales and promotions at major beauty retailers."
+  }
+  
