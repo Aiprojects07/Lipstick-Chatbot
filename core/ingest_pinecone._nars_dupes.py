@@ -53,7 +53,7 @@ def now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 def slugify(t: str) -> str:
-    t = t.lower()
+    t = (t or "").lower()
     # keep only a-z, 0-9, spaces and hyphens during normalization
     t = re.sub(r"[^a-z0-9\s-]+", "", t)
     # convert whitespace and slashes to single hyphen
@@ -132,27 +132,21 @@ def embed_texts(oai: OpenAI, model: str, texts: List[str], batch: int = 100) -> 
 # -------------------- chunk building --------------------
 
 def build_chunks_from_dupe_json(data: Dict[str, Any], source_name: str) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
-    # Identity from original product - standardize to match report format
-    op = data.get("original_product", {}) or {}
-    op_name = (op.get("name") or "").strip()
-    
-    # Parse the product name to extract components
-    id_parts = parse_original_name(op_name)
-    brand = id_parts.get("brand") or "Unknown"
-    product_line = id_parts.get("product_line") or ""
-    shade = id_parts.get("shade") or ""
-    
-    # Shade is mandatory for product identity
+    # Identity is read ONLY from this dupes JSON's top-level `product` block
+    prod = (data or {}).get("product") or {}
+    product_name_canonical = (prod.get("full_name") or "").strip()
+    brand = (prod.get("brand") or "").strip()
+    product_line = (prod.get("product_line") or "").strip()
+    shade = (prod.get("shade") or "").strip()
+    category = (prod.get("category") or "").strip()
+
+    # Validate mandatory identity fields
+    if not product_name_canonical:
+        raise ValueError("dupes JSON must include top-level product.full_name for product identity.")
     if not shade:
-        raise ValueError("Shade is required to build product identity for dupes ingestion. Provide a shade in original_product.name (e.g., 'Brand Line in Shade').")
-    
-    # Create standardized product name matching report format: "Brand Product Line - Shade"
-    if brand and product_line and shade:
-        product_name_canonical = f"{brand} {product_line} - {shade}"
-    else:
-        product_name_canonical = op_name if op_name else join_nonempty([brand, product_line, shade], " ")
-    
-    product_id = slugify(product_name_canonical) if product_name_canonical else "unknown_product"
+        raise ValueError("dupes JSON must include top-level product.shade (Brand Product Line - Shade).")
+
+    product_id = slugify(product_name_canonical)
 
     base_meta = {
         "product_id": product_id,
@@ -160,16 +154,16 @@ def build_chunks_from_dupe_json(data: Dict[str, Any], source_name: str) -> Tuple
         "brand": brand,
         "product_line": product_line,
         "shade": shade,
+        "category": category,
         "doc_family": "dupe_guide",  # Changed to match report format pattern
         "language": "en",
-        "source": source_name,
-        "created_at": now_iso(),
-        "updated_at": now_iso(),
     }
 
     records: List[Dict[str, Any]] = []
 
-    # ---- 1) Original product chunk
+    # ---- 1) Original product chunk (from dupes JSON)
+    op = data.get("original_product", {}) or {}
+    op_name = (op.get("name") or "").strip()
     op_price = op.get("price_usd")
     op_shade_desc = op.get("shade_description")
 
@@ -177,6 +171,7 @@ def build_chunks_from_dupe_json(data: Dict[str, Any], source_name: str) -> Tuple
         f"Original Product: {op_name}" if op_name else "Original Product",
         f"Price (USD): {op_price}" if op_price is not None else None,
         f"Shade description: {op_shade_desc}" if op_shade_desc else None,
+        f"Category: {category}" if category else None,
     ]
     op_content = "\n".join([l for l in op_content_lines if l])
 
@@ -323,7 +318,7 @@ def build_chunks_from_dupe_json(data: Dict[str, Any], source_name: str) -> Tuple
 
 def main():
     # Load environment variables from .env file
-    load_dotenv()
+    load_dotenv(override=True)
     
     # Setup logging
     logging.basicConfig(
@@ -338,9 +333,14 @@ def main():
     
     logger.info("Starting NARS dupes ingestion process")
     
-    # Configuration from environment variables only
-    json_file_path = "/home/sid/Documents/Lipstick_Chatbot 1/Lipstick_Chatbot/data/nars-dolce-vita-dupes.json"
-    index_name = os.getenv("PINECONE_INDEX_NAME", "lipstick-chatbot")
+    # Configuration: single source path for dupes JSON
+    default_dupes_path = os.path.join(
+        os.path.dirname(os.path.dirname(__file__)),
+        "data",
+        "nars-dolce-vita-dupes.json",
+    )
+    json_file_path = os.getenv("DUPES_JSON_PATH", default_dupes_path)
+    index_name = os.getenv("PINECONE_INDEX_NAME", "nars-air-matte-lip-color-dolce-vita")
     namespace = os.getenv("PINECONE_NAMESPACE", "default")
     environment = os.getenv("PINECONE_ENVIRONMENT", "us-east-1")
     embedding_model = os.getenv("OPENAI_EMBEDDING_MODEL", "text-embedding-3-large")
@@ -359,7 +359,7 @@ def main():
 
     logger.info("Environment variables validated successfully")
 
-    # load JSON from hardcoded path
+    # load JSON from single configured path
     try:
         logger.info(f"Loading JSON data from {json_file_path}")
         with open(json_file_path, "r", encoding="utf-8") as f:
@@ -373,8 +373,10 @@ def main():
     try:
         logger.info("Building records from dupe JSON")
         records, base_meta = build_chunks_from_dupe_json(data, source_name=os.path.basename(json_file_path))
-        # Identity check print
-        logger.info("IDENTITY | product_name='%s' product_id='%s' brand='%s' line='%s' shade='%s'", base_meta.get("product_name"), base_meta.get("product_id"), base_meta.get("brand"), base_meta.get("product_line"), base_meta.get("shade"))
+        # Identity check print (visual confirmation before upsert)
+        logger.info("IDENTITY | product_name='%s' product_id='%s' brand='%s' line='%s' shade='%s'",
+                    base_meta.get("product_name"), base_meta.get("product_id"),
+                    base_meta.get("brand"), base_meta.get("product_line"), base_meta.get("shade"))
         logger.info(f"Built {len(records)} chunks for product_name='{base_meta['product_name']}' (product_id='{base_meta['product_id']}')")
         print(f"[info] Built {len(records)} chunks for product_name='{base_meta['product_name']}' (product_id='{base_meta['product_id']}').")
     except Exception as e:

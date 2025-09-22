@@ -79,9 +79,12 @@ def now_iso() -> str:
 
 def slugify(t: str) -> str:
     t = (t or "").lower()
-    t = re.sub(r"[^\w\s-]+", "", t)
-    t = re.sub(r"[\s/]+", "_", t)
-    t = re.sub(r"_+", "_", t).strip("_")
+    # keep only a-z, 0-9, spaces and hyphens during normalization
+    t = re.sub(r"[^a-z0-9\s-]+", "", t)
+    # convert whitespace and slashes to single hyphen
+    t = re.sub(r"[\s/]+", "-", t)
+    # collapse repeated hyphens and trim
+    t = re.sub(r"-+", "-", t).strip("-")
     return t or "unknown"
 
 def stable_id(*parts: str) -> str:
@@ -158,11 +161,19 @@ def embed_texts(oai: OpenAI, model: str, texts: List[str], batch_size: int = 100
 def build_records_from_report(data: Dict[str, Any], source_name: str) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
     # Identity
     product = data.get("product") or {}
-    product_name = product.get("full_name") or data.get("title") or source_name
-    product_id = slugify(product_name)
+    # Fetch full canonical product name exclusively from report JSON
+    product_name = product.get("full_name") or ""
     brand = product.get("brand") or ""
     product_line = product.get("product_line") or ""
     shade = product.get("shade") or ""
+    category = product.get("category") or ""
+    # Enforce mandatory fields
+    if not product_name:
+        raise ValueError("product.full_name is required in the report JSON to build product identity.")
+    if not shade:
+        raise ValueError("product.shade is required in the report JSON to build product identity (Brand Product Line - Shade).")
+    # Slugified human-readable deterministic ID
+    product_id = slugify(product_name)
 
     base_meta = {
         "product_id": product_id,
@@ -170,11 +181,9 @@ def build_records_from_report(data: Dict[str, Any], source_name: str) -> Tuple[L
         "brand": brand,
         "product_line": product_line,
         "shade": shade,
+        "category": category,
         "doc_family": "lip_report",          # family name for this JSON type
         "language": "en",
-        "source": source_name,
-        "created_at": now_iso(),
-        "updated_at": now_iso(),
     }
 
     records: List[Dict[str, Any]] = []
@@ -185,6 +194,7 @@ def build_records_from_report(data: Dict[str, Any], source_name: str) -> Tuple[L
         f"Brand: {brand}" if brand else "",
         f"Line: {product_line}" if product_line else "",
         f"Shade: {shade}" if shade else "",
+        f"Category: {category}" if category else "",
         f"Title: {data.get('title') or ''}",
     ]).strip()
     r_id = f"{product_id}:meta:{stable_id(product_id, 'meta', meta_txt)}"
@@ -303,8 +313,8 @@ def build_records_from_report(data: Dict[str, Any], source_name: str) -> Tuple[L
 # -------------------- main --------------------
 
 def main():
-    # Load environment variables from .env file
-    load_dotenv()
+    # Load environment variables from .env file with override
+    load_dotenv(override=True)
     
     # Setup logging
     logging.basicConfig(
@@ -320,8 +330,8 @@ def main():
     logger.info("Starting NARS report ingestion process")
     
     # Configuration from environment variables only
-    file_path = os.getenv("FILE_PATH", "/home/sid/Documents/Lipstick_Chatbot 1/Lipstick_Chatbot/data/nars-dolce-vita-reports.json")
-    index_name = os.getenv("PINECONE_INDEX_NAME", "lipstick-chatbot")
+    file_path = os.getenv("FILE_PATH", "/home/sid/Lipstick_chatbot_generalise/data/nars-dolce-vita-report.json")
+    index_name = os.getenv("PINECONE_INDEX_NAME", "nars-air-matte-lip-color-dolce-vita")
     namespace = os.getenv("PINECONE_NAMESPACE", "default")
     environment = os.getenv("PINECONE_ENVIRONMENT", "us-east-1")
     embedding_model = os.getenv("OPENAI_EMBEDDING_MODEL", "text-embedding-3-large")
@@ -356,6 +366,10 @@ def main():
         logger.info("Building records from report JSON")
         records, base_meta = build_records_from_report(data, source_name=os.path.basename(file_path))
         logger.info(f"Built {len(records)} records for product_id='{base_meta['product_id']}' product_name='{base_meta['product_name']}'")
+        # Identity check print (visual confirmation before upsert)
+        logger.info("IDENTITY | product_name='%s' product_id='%s' brand='%s' line='%s' shade='%s'",
+                    base_meta.get("product_name"), base_meta.get("product_id"),
+                    base_meta.get("brand"), base_meta.get("product_line"), base_meta.get("shade"))
         print(f"[info] Built {len(records)} records for product_id='{base_meta['product_id']}' product_name='{base_meta['product_name']}'.")
     except Exception as e:
         logger.error(f"Failed to build records: {e}")

@@ -12,7 +12,7 @@ from openai import OpenAI
 from dotenv import load_dotenv
 
 # Load environment from .env if present
-load_dotenv()
+load_dotenv(override=True)
 
 # ---------- logging ----------
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
@@ -27,75 +27,61 @@ import re
 
 def slugify(t: str) -> str:
     t = (t or "").lower()
-    t = re.sub(r"[^\w\s-]+", "", t)
-    t = re.sub(r"[\s/]+", "_", t)
-    t = re.sub(r"_+", "_", t).strip("_")
+    # keep only a-z, 0-9, spaces and hyphens during normalization
+    t = re.sub(r"[^a-z0-9\s-]+", "", t)
+    # convert whitespace and slashes to single hyphen
+    t = re.sub(r"[\s/]+", "-", t)
+    # collapse repeated hyphens and trim
+    t = re.sub(r"-+", "-", t).strip("-")
     return t or "unknown"
 
 
-def load_product_identity() -> Dict[str, str]:
-    """Load product fields from a report JSON (preferred), else from env, else defaults."""
-    # Default to the report JSON used elsewhere in the repo
-    default_report_path = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)),
-        "data",
-        "nars-dolce-vita-report.json",
-    )
-    report_path = os.getenv("PRODUCT_INFO_JSON_PATH", default_report_path)
-
-    name = os.getenv("PRODUCT_NAME")
-    brand = os.getenv("PRODUCT_BRAND")
-    line = os.getenv("PRODUCT_LINE")
-    shade = os.getenv("PRODUCT_SHADE")
-
+def load_product_identity(attrs_path: str) -> Dict[str, str]:
+    """Load product fields ONLY from the attributes JSON at attrs_path.
+    Requires a top-level `product` object with brand, product_line, shade, full_name.
+    Shade is mandatory."""
     try:
-        with open(report_path, "r", encoding="utf-8") as f:
-            rpt = json.load(f)
-        prod = (rpt or {}).get("product") or {}
-        # Prefer JSON fields if present
-        name = prod.get("full_name") or name
-        brand = prod.get("brand") or brand
-        line = prod.get("product_line") or line
-        shade = prod.get("shade") or shade
-    except Exception:
-        # If report missing/unreadable, rely on env/defaults
-        pass
+        with open(attrs_path, "r", encoding="utf-8") as f:
+            attrs_json = json.load(f)
+    except Exception as e:
+        raise RuntimeError(f"Failed to load attributes JSON at '{attrs_path}': {e}")
 
-    # Sensible defaults if still missing
-    name = name or "NARS Air Matte Lip Color - Dolce Vita"
-    brand = brand or "NARS"
-    line = line or "Air Matte Lip Color"
-    shade = shade or "Dolce Vita"
+    if not isinstance(attrs_json, dict):
+        raise ValueError("Attributes JSON must be an object at the top level.")
 
-    pid = os.getenv("PRODUCT_ID") or slugify(name)
+    prod = (attrs_json or {}).get("product") or {}
+    brand = (prod.get("brand") or "").strip()
+    line = (prod.get("product_line") or "").strip()
+    shade = (prod.get("shade") or "").strip()
+    full_name = (prod.get("full_name") or "").strip()
+    category = (prod.get("category") or "").strip()
+
+    if not full_name:
+        raise ValueError("attributes JSON must include top-level product.full_name for product identity.")
+    if not shade:
+        raise ValueError("attributes JSON must include top-level product.shade (Brand Product Line - Shade).")
+
+    pid = slugify(full_name)
 
     return {
         "product_id": pid,
-        "product_name": name,
+        "product_name": full_name,
         "brand": brand,
         "product_line": line,
         "shade": shade,
+        "category": category,
     }
-
-# Materialize product identity once
-_PROD = load_product_identity()
-PRODUCT_ID = _PROD["product_id"]
-PRODUCT_NAME = _PROD["product_name"]
-BRAND = _PROD["brand"]
-PRODUCT_LINE = _PROD["product_line"]
-SHADE = _PROD["shade"]
-# --------------------------------------------------------
 
 # --------- Config (from env with sane defaults) ---------
 # Pinecone index config
-INDEX_NAME = os.getenv("PINECONE_INDEX_NAME", "lipstick-chatbot").lower().replace("_", "-")
+INDEX_NAME = os.getenv("PINECONE_INDEX_NAME", "nars-air-matte-lip-color-dolce-vita").lower().replace("_", "-")
 
 # Embedding model config
 MODEL = os.getenv("OPENAI_EMBEDDING_MODEL", "text-embedding-3-large")  # 3072-dim for default
 # If you might change MODEL, update EMBED_DIM accordingly (map models->dims if needed)
 EMBED_DIM = int(os.getenv("EMBED_DIM", "3072"))
 
-# Data source path (relative to repo by default)
+# Data source path (relative to repo by default) — SINGLE SOURCE for attributes
 JSON_PATH = os.getenv(
     "ATTRIBUTES_JSON_PATH",
     str(os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "nars-dolce-vita-attributes.by-category.json"))
@@ -113,6 +99,16 @@ PINECONE_CLOUD = os.getenv("PINECONE_CLOUD", "aws")
 PINECONE_REGION = os.getenv("PINECONE_REGION", "us-east-1")
 # --------------------------------------------------------
 
+# Materialize product identity once (after JSON_PATH is defined)
+_PROD = load_product_identity(JSON_PATH)
+PRODUCT_ID = _PROD["product_id"]
+PRODUCT_NAME = _PROD["product_name"]
+BRAND = _PROD["brand"]
+PRODUCT_LINE = _PROD["product_line"]
+SHADE = _PROD["shade"]
+PRODUCT_CATEGORY = _PROD.get("category") or ""
+# --------------------------------------------------------
+
 def load_data(path: str) -> Dict[str, Dict[str, List[str]]]:
     with open(path, "r", encoding="utf-8") as f:
         data = json.load(f)
@@ -123,12 +119,17 @@ def load_data(path: str) -> Dict[str, Dict[str, List[str]]]:
 def yield_records(data: Dict[str, Dict[str, List[str]]]) -> Iterable[Dict]:
     """
     Yields items with no data loss: one record per individual value occurrence.
-    ID format: <slug(category)>|<slug(attribute_name)>|<idx>
+    Treats the top-level `product` block as identity only (skipped for attribute records).
+    Uses product `category` (e.g., "Lipstick") as Category and other top-level keys as Subcategory.
+    ID format: <slug(subcategory)>|<slug(attribute_name)>|<idx>
     """
     def attr_slug(s: str) -> str:
         return "".join(c if c.isalnum() else "-" for c in s).strip("-").lower()[:100]
 
-    for category, attrs in data.items():
+    for subcategory, attrs in data.items():
+        # Skip the identity block
+        if subcategory == "product":
+            continue
         if not isinstance(attrs, dict):
             continue
         for attr_name, values in attrs.items():
@@ -141,16 +142,20 @@ def yield_records(data: Dict[str, Dict[str, List[str]]]) -> Iterable[Dict]:
                 # Normalize to strings, but also keep original in metadata
                 val_str = "" if val is None else str(val)
                 # Text to embed: include rich context so retrieval is strong
-                text = f"Category: {category}\nAttribute: {attr_name}\nValue: {val_str}"
+                text = (
+                    f"Category: {PRODUCT_CATEGORY}\n"
+                    f"Subcategory: {subcategory}\n"
+                    f"Attribute: {attr_name}\n"
+                    f"Value: {val_str}"
+                )
                 # Stable, collision-resistant id
-                _id = f"{attr_slug(category)}|{attr_slug(attr_name)}|{i}"
+                _id = f"{attr_slug(subcategory)}|{attr_slug(attr_name)}|{i}"
                 metadata = {
-                    "category": category,
+                    "category": PRODUCT_CATEGORY,
+                    "subcategory": subcategory,
                     "attribute_name": attr_name,
                     "value": val_str,
                     "position": i,                 # occurrence index to preserve multiplicity
-                    "source": os.path.basename(JSON_PATH),
-                    "schema": "category->attribute_name->values[]",
                     # Provide human-readable content for prompting
                     "content": text,
                     # product identity for retrieval alignment
@@ -207,6 +212,8 @@ def main():
     logger.info("Starting attributes ingestion")
     logger.info("Config | index='%s' namespace=%s model='%s' batch_size=%s", INDEX_NAME, NAMESPACE, MODEL, BATCH_SIZE)
     logger.info("Paths | JSON_PATH='%s'", JSON_PATH)
+    # Identity check print (visual confirmation before upsert)
+    logger.info("IDENTITY | product_name='%s' product_id='%s' brand='%s' line='%s' shade='%s'", PRODUCT_NAME, PRODUCT_ID, BRAND, PRODUCT_LINE, SHADE)
 
     # Clients
     openai_key = os.getenv("OPENAI_API_KEY")
