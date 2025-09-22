@@ -166,9 +166,10 @@ def make_prompt_for_claude(user_q: str, contexts: List[Dict[str, Any]]) -> str:
 def load_system_prompt() -> str:
     """
     Load the system prompt from the default path under data/.
+    Fail fast if the file is missing or empty.
     """
-    # Compute default path relative to project root: <repo>/data/lipstick_qa_system_message (1).txt
-    default_path = str((Path(__file__).resolve().parent.parent / "data" / "lipstick_qa_system_message (1).txt"))
+    # Compute default path relative to project root: <repo>/data/lipstick_qa_system_message (2).txt
+    default_path = str((Path(__file__).resolve().parent.parent / "data" / "lipstick_qa_system_message (2).txt"))
     path = default_path
     logger.info("Loading system prompt from %s", path)
     try:
@@ -176,12 +177,17 @@ def load_system_prompt() -> str:
             content = f.read().strip()
             if content:
                 return content
-    except Exception:
-        pass
-    return (
-        "You are a concise, fact-grounded assistant. Answer only from the provided context. "
-        "Keep responses brief and do not fabricate information."
-    )
+            raise RuntimeError(
+                f"System prompt file is empty at: {path}. Please upload the correct prompt file."
+            )
+    except FileNotFoundError as e:
+        raise RuntimeError(
+            f"System prompt file not found at: {path}. Please upload the correct prompt file."
+        ) from e
+    except Exception as e:
+        raise RuntimeError(
+            f"Failed to load system prompt from {path}: {e}"
+        ) from e
 
 # ---------- main pipeline (no filters) ----------
 
@@ -256,9 +262,13 @@ def answer_with_claude_no_filters(query: str) -> Dict[str, Any]:
 def main():
     if len(sys.argv) >= 2:
         q = " ".join(sys.argv[1:])
-        out = answer_with_claude_no_filters(q)
-        print(out.get("answer", ""))
-        conversation_memory.add_exchange(q, out.get("answer", ""))
+        try:
+            out = answer_with_claude_no_filters(q)
+            print(out.get("answer", ""))
+            conversation_memory.add_exchange(q, out.get("answer", ""))
+        except RuntimeError as e:
+            print(str(e))
+            return
         if "top_product_candidates" in out:
             logger.debug("top_product_candidates: %s", out["top_product_candidates"])
         return
@@ -277,9 +287,13 @@ def main():
             conversation_memory.clear_history()
             print("Conversation history cleared.")
             continue
-        out = answer_with_claude_no_filters(q)
-        print(out.get("answer", ""))
-        conversation_memory.add_exchange(q, out.get("answer", ""))
+        try:
+            out = answer_with_claude_no_filters(q)
+            print(out.get("answer", ""))
+            conversation_memory.add_exchange(q, out.get("answer", ""))
+        except RuntimeError as e:
+            print(str(e))
+            continue
         if "top_product_candidates" in out:
             logger.debug("top_product_candidates: %s", out["top_product_candidates"])
 
