@@ -54,9 +54,12 @@ def now_iso() -> str:
 
 def slugify(t: str) -> str:
     t = t.lower()
-    t = re.sub(r"[^\w\s-]+", "", t)
-    t = re.sub(r"[\s/]+", "_", t)
-    t = re.sub(r"_+", "_", t).strip("_")
+    # keep only a-z, 0-9, spaces and hyphens during normalization
+    t = re.sub(r"[^a-z0-9\s-]+", "", t)
+    # convert whitespace and slashes to single hyphen
+    t = re.sub(r"[\s/]+", "-", t)
+    # collapse repeated hyphens and trim
+    t = re.sub(r"-+", "-", t).strip("-")
     return t
 
 def stable_id(meta: Dict[str, Any], text: str) -> str:
@@ -138,6 +141,10 @@ def build_chunks_from_dupe_json(data: Dict[str, Any], source_name: str) -> Tuple
     brand = id_parts.get("brand") or "Unknown"
     product_line = id_parts.get("product_line") or ""
     shade = id_parts.get("shade") or ""
+    
+    # Shade is mandatory for product identity
+    if not shade:
+        raise ValueError("Shade is required to build product identity for dupes ingestion. Provide a shade in original_product.name (e.g., 'Brand Line in Shade').")
     
     # Create standardized product name matching report format: "Brand Product Line - Shade"
     if brand and product_line and shade:
@@ -366,6 +373,8 @@ def main():
     try:
         logger.info("Building records from dupe JSON")
         records, base_meta = build_chunks_from_dupe_json(data, source_name=os.path.basename(json_file_path))
+        # Identity check print
+        logger.info("IDENTITY | product_name='%s' product_id='%s' brand='%s' line='%s' shade='%s'", base_meta.get("product_name"), base_meta.get("product_id"), base_meta.get("brand"), base_meta.get("product_line"), base_meta.get("shade"))
         logger.info(f"Built {len(records)} chunks for product_name='{base_meta['product_name']}' (product_id='{base_meta['product_id']}')")
         print(f"[info] Built {len(records)} chunks for product_name='{base_meta['product_name']}' (product_id='{base_meta['product_id']}').")
     except Exception as e:

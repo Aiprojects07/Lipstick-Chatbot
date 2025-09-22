@@ -165,11 +165,12 @@ def make_prompt_for_claude(user_q: str, contexts: List[Dict[str, Any]]) -> str:
 
 def load_system_prompt() -> str:
     """
-    Load the system prompt from SYSTEM_PROMPT_PATH or fall back to the known absolute path.
+    Load the system prompt from the default path under data/.
     """
-    # Compute default path relative to project root: <repo>/data/lipstick_qa_system_message.txt
-    default_path = str((Path(__file__).resolve().parent.parent / "data" / "lipstick_qa_system_message.txt"))
-    path = env("SYSTEM_PROMPT_PATH", default_path)
+    # Compute default path relative to project root: <repo>/data/lipstick_qa_system_message (1).txt
+    default_path = str((Path(__file__).resolve().parent.parent / "data" / "lipstick_qa_system_message (1).txt"))
+    path = default_path
+    logger.info("Loading system prompt from %s", path)
     try:
         with open(path, "r", encoding="utf-8") as f:
             content = f.read().strip()
